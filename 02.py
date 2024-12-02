@@ -9,12 +9,18 @@ with open("input-02.txt", "r") as file:
 # 8 6 4 4 1
 # 1 3 6 7 9
 # """.splitlines()][1:]
-# # Example answer  = 2
+# # Example answer  = 4
 
 def parse(lines):
     return [[int(level) for level in report.split()] for report in lines]
 
 def is_safe(report):
+    for i in range(len(report)):
+        if _is_safe(report[:i] + report[i+1:]):
+            return True
+    return False
+
+def _is_safe(report):
     for i in range(len(report)-1):
         l1, l2 = report[i:i+2]
         if l1 == l2:

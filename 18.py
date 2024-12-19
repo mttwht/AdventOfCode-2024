@@ -36,6 +36,7 @@ input = aoc.read_file_lines("input-18.txt")
 # GRID_SIZE = 6
 # NUM_BYTES = 12
 # # Example answer for part 1 = 22
+# # Example answer for part 1 = 6,1
 
 
 def parse(input: list[str]) -> list[tuple[int, int]]:
@@ -46,7 +47,7 @@ def shortest_path_len(
     start: tuple[int, int],
     end: tuple[int, int]
 ) -> int:
-    dists = [[-1 for _ in range(len(row))] for row in map]
+    dists = [[None for _ in range(len(row))] for row in map]
     (sx, sy), (ex, ey) = start, end
     dists[sy][sx] = 0
     queue = [(sx, sy)]
@@ -54,7 +55,7 @@ def shortest_path_len(
         x, y = queue.pop(0)
         for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
             nx, ny = x + dx, y + dy
-            if 0 <= nx < len(map[0]) and 0 <= ny < len(map) and dists[ny][nx] == -1 and map[ny][nx] == EMPTY:
+            if 0 <= nx < len(map[0]) and 0 <= ny < len(map) and dists[ny][nx] is None and map[ny][nx] == EMPTY:
                 dists[ny][nx] = dists[y][x] + 1
                 queue.append((nx, ny))
     return dists[ey][ex]
@@ -70,3 +71,9 @@ aoc.print_grid(map)
 
 answer = shortest_path_len(map, start, end)
 print('Part 1:', answer)
+
+for x,y in falling_bytes:
+    map[y][x] = '#'
+    if shortest_path_len(map, start, end) is None:
+        print('Part 2:', f"{x},{y}")
+        break
